@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MichiGuessr</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <h2>Where was this picture taken?</h2>
+    <div id="game"> 
+        <img src="{{ url_for('static', filename='images/' + image) }}" alt="Location Image">
+        <div id="map"></div>
+    </div>
+    <form id="guessForm" action="/guess" method="post">
+        <label for="user_guess">Click on the map to make your guess:</label>
+        <input type="hidden" id="user_guess" name="user_guess" required>
+        <button type="submit">Submit Guess</button>
+    </form>
+    <script>
+        // var umichBounds = [
+        //     [42.2799646,-83.7424975],
+        //     [42.2967747,-83.7254254]
+        // ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var umichMap = L.map('map').setView([42.2903019, -83.7287606], 14.2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(umichMap);
+            // L.rectangle(umichBounds, {color: 'blue', fill: true, fillOpacity: 0.2}).addTo(umichMap);
+
+            umichMap.on('click', function(e) {
+                document.getElementById('user_guess').value = e.latlng.lat + ',' + e.latlng.lng;
+            });
+
+            umichMap.invalidateSize();
+        });
+
+    </script>
+</body>
+</html>
